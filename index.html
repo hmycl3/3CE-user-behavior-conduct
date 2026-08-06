@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="匿名美妆消费与个人风格调查，大约只需要2分钟。" />
+    <title>3CE Color Cosmos｜彩妆消费小调查</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="cosmos">
+      <div class="wash wash-one"></div>
+      <div class="wash wash-two"></div>
+      <div class="cloud cloud-one"></div>
+      <div class="cloud cloud-two"></div>
+      <div class="stars" id="stars" aria-hidden="true"></div>
+      <section class="panel hero" id="hero">
+        <h1>3CE</h1>
+        <p>匿名作答，大约只需要 2 分钟。</p>
+        <button class="primary" id="start" type="button">开始填写 <span>↗</span></button>
+      </section>
+      <form class="panel question hidden" id="survey" novalidate>
+        <header class="topline"><span>3CE</span><b id="counter">01 / 17</b></header>
+        <div class="progress"><i id="progress"></i></div>
+        <div class="question-copy"><p id="section"></p><h2 id="title"></h2><small id="hint"></small></div>
+        <div class="options" id="options"></div>
+        <p class="notice" id="notice" role="status"></p>
+        <footer class="actions">
+          <button class="back" id="back" type="button">← 上一题</button>
+          <button class="primary next" id="next" type="submit">下一题 <span>→</span></button>
+        </footer>
+      </form>
+      <section class="panel thanks hidden" id="thanks">
+        <span class="moon">✦</span>
+        <h2>你的色彩信号<br /><em>已被收到</em></h2>
+        <p>问卷结束，感谢您的参与！</p>
+        <button class="primary" id="again" type="button">再填一次</button>
+      </section>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
