@@ -23,6 +23,14 @@ const ratingFields = [
   ["threece_community", "3CE女性圈层社区"],
 ];
 
+const supplementFields = [
+  ["purchase_difficulties_note", "购买困难补充"],
+  ["recommendation_mismatch_note", "种草经历补充"],
+  ["threece_churn_reasons_note", "未持续购买3CE原因补充"],
+  ["kdrama_elements_note", "韩剧元素补充"],
+  ["style_profile_inputs_note", "品牌了解信息补充"],
+];
+
 const $ = (id) => document.getElementById(id);
 let responses = [];
 
@@ -95,6 +103,33 @@ function chartCard(label, entries, denominator = responses.length) {
   return article;
 }
 
+function supplementCard(items) {
+  const article = document.createElement("article");
+  article.className = "chart-card text-response-card";
+  const heading = document.createElement("h2");
+  heading.textContent = "选填补充回答";
+  article.append(heading);
+  const notes = items.flatMap((item) => supplementFields
+    .filter(([key]) => item.answers?.[key]?.trim())
+    .map(([key, label]) => [label, item.answers[key]]));
+  if (!notes.length) {
+    const empty = document.createElement("p");
+    empty.className = "empty";
+    empty.textContent = "暂无补充回答";
+    article.append(empty);
+    return article;
+  }
+  notes.slice(0, 30).forEach(([label, answer]) => {
+    const block = document.createElement("p");
+    block.className = "text-response";
+    const strong = document.createElement("strong");
+    strong.textContent = `${label}：`;
+    block.append(strong, document.createTextNode(answer));
+    article.append(block);
+  });
+  return article;
+}
+
 function render() {
   const now = Date.now();
   const day = 86_400_000;
@@ -137,7 +172,7 @@ function render() {
     return chartCard(`体验评分｜${label}（平均 ${average} 分）`, counts.entries(), answered.length);
   });
 
-  $("charts").replaceChildren(...fieldCharts, ...ratingCharts);
+  $("charts").replaceChildren(...fieldCharts, ...ratingCharts, supplementCard(currentResponses));
 
   $("count").textContent = `共 ${responses.length} 份（含历史版本）`;
   $("rows").replaceChildren(...responses.map((item) => {
@@ -185,6 +220,7 @@ $("export").addEventListener("click", () => {
     "问卷版本",
     ...fields.map(([, label]) => label),
     ...ratingFields.map(([, label]) => `体验评分：${label}`),
+    ...supplementFields.map(([, label]) => label),
     "希望长期陪伴品牌提供的内容",
     "完整原始答案(JSON)",
   ];
@@ -194,6 +230,7 @@ $("export").addEventListener("click", () => {
     item.surveyVersion || "历史版本",
     ...fields.map(([key]) => item.answers?.[key]),
     ...ratingFields.map(([key]) => item.answers?.experience_interest?.[key]),
+    ...supplementFields.map(([key]) => item.answers?.[key] || ""),
     item.answers?.brand_companionship || "",
     item.answers || {},
   ]);
